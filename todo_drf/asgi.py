@@ -1,5 +1,5 @@
 """
-ASGI config for todo_drf project.
+ASGI config for todo_drf_backend project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

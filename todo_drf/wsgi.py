@@ -1,5 +1,5 @@
 """
-WSGI config for todo_drf project.
+WSGI config for todo_drf_backend project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
