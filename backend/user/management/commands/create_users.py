@@ -1,5 +1,8 @@
+import random
+
 from django.core.management.base import BaseCommand
 from user.models import User
+from string import ascii_letters
 
 
 class Command(BaseCommand):
@@ -11,10 +14,13 @@ class Command(BaseCommand):
             superuser.save()
         except Exception as e:
             self.stderr.write(self.style.ERROR(e))
-        for i in range(3):
+        for i in range(1000):
             try:
                 i = str(i)
-                user = User.objects.create_user(f'user_{i}', f'user_{i}@mail.ru', '94182fkoasdfrRF21')
+                username = ''.join([random.choice(ascii_letters) for j in range(10)])
+                password = ''.join([random.choice(ascii_letters) for j in range(10)])
+                user = User.objects.create_user(username=f'user_{username}', email=f'{username}@mail.ru',
+                                                password=password, first_name="Ivan", last_name=username)
                 user.save()
 
                 self.stdout.write(self.style.SUCCESS(f'Succesfully created user {i}'))
