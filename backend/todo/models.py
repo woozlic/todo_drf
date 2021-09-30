@@ -16,7 +16,7 @@ class Project(models.Model):
 
 
 class Todo(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='todos')
     text = models.TextField()
     created_datetime = models.DateTimeField(default=timezone.now)
     updated_datetime = models.DateTimeField(default=timezone.now)
