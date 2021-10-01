@@ -24,7 +24,7 @@ class ProjectSerializer(HyperlinkedModelSerializer):
 class TodoSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Todo
-        fields = ['project', 'user_owner', 'text', 'is_active', 'created_datetime', 'updated_datetime']
+        fields = ['url', 'project', 'user_owner', 'text', 'is_active', 'created_datetime', 'updated_datetime']
 
     def validate_created_datetime(self, value):
         if value > timezone.now():
