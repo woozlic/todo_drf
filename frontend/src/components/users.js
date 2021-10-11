@@ -1,12 +1,53 @@
 import React from "react";
+import {Link, useParams} from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+
+const UserProfile = () => {
+    const [user, setUser] = useState({})
+    const {id} = useParams()
+    useEffect(() => {
+      let isMounted = true
+      axios.get(`http://127.0.0.1:8000/api/users/${id}`)
+        .then((data) => {
+            if (isMounted) {
+                setUser(data.data)
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+        return () => { isMounted = false }
+    }, [id])
+    return(
+        <div>
+            {
+                user ?
+                    <div>
+                        <div>Профиль пользователя {user.username}</div>
+                        <div>
+                            <p>Имя: {user.firstName}</p>
+                            <p>Фамилия: {user.lastName}</p>
+                            <p>Email: {user.email}</p>
+                        </div>
+                    </div>
+                        :
+                        <div>
+                            Не удалось получить данные профиля
+                        </div>
+            }
+        </div>
+    )
+}
 
 const UserItem = ({user}) => {
     return (
         <tr>
-            <td>{user.first_name}</td>
-            <td>{user.last_name}</td>
+            <td>{user.firstName}</td>
+            <td>{user.lastName}</td>
             <td>{user.email}</td>
-            <td>{user.username}</td>
+            <td><Link to={`users/${user.id}`}>{user.username}</Link></td>
         </tr>
     )
 }
@@ -32,4 +73,5 @@ const UserList = ({users}) => {
     )
 }
 
+export { UserProfile }
 export default UserList
