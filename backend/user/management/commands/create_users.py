@@ -19,8 +19,10 @@ class Command(BaseCommand):
                 i = str(i)
                 username = ''.join([random.choice(ascii_letters) for j in range(10)])
                 password = ''.join([random.choice(ascii_letters) for j in range(10)])
+                first_name = random.choice(['Ivan', 'Dmitry', 'Kirill', 'Alexey', 'Sasha', 'Davyd', 'Egor', 'Anton'])
+                last_name = random.choice(['Ivanov', 'Kozlov', 'Shirshin', 'Egorov', 'Alexeev', 'Andreev', 'Aleev'])
                 user = User.objects.create_user(username=f'user_{username}', email=f'{username}@mail.ru',
-                                                password=password, first_name="Ivan", last_name=username)
+                                                password=password, first_name=first_name, last_name=last_name)
                 user.save()
 
                 self.stdout.write(self.style.SUCCESS(f'Succesfully created user {i}'))
