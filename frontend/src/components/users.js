@@ -2,11 +2,13 @@ import React from "react";
 import {Link, useParams} from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { DataGrid } from '@mui/x-data-grid';
 
 
 const UserProfile = ({getHeaders}) => {
     const [user, setUser] = useState({})
     const {id} = useParams()
+
     useEffect(() => {
       let isMounted = true
       axios.get(`http://127.0.0.1:8000/api/users/${id}`, {headers: getHeaders()})
@@ -20,6 +22,7 @@ const UserProfile = ({getHeaders}) => {
         })
         return () => { isMounted = false }
     }, [id, getHeaders])
+
     return(
         <div>
             {
@@ -54,22 +57,42 @@ const UserItem = ({user}) => {
 
 const UserList = ({users}) => {
 
+    const columns = [
+    {
+        field: 'firstName',
+        headerName: 'First name',
+        width: 150,
+        editable: false,
+    },
+    {
+        field: 'lastName',
+        headerName: 'Last name',
+        width: 300,
+        editable: false,
+    },
+    {
+        field: 'email',
+        headerName: 'Email',
+        width: 200,
+        editable: false,
+    },
+    {
+        field: 'username',
+        headerName: 'Username',
+        width: 150,
+        editable: false,
+    }]
+
     return (
-        <table>
-            <tbody>
-                <tr>
-                    <td>Имя</td>
-                    <td>Фамилия</td>
-                    <td>Email</td>
-                    <td>Никнейм</td>
-                </tr>
-
-                {users.map(user =>
-                    <UserItem user={user} key={user.email} />
-                )}
-            </tbody>
-        </table>
-
+        <div style={{ height: 400, width: 800, margin: "0 auto"}}>
+            <DataGrid
+                rows={users}
+                columns={columns}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+                disableSelectionOnClick
+            />
+        </div>
     )
 }
 
