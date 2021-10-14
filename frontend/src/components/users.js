@@ -81,6 +81,13 @@ const UserList = ({users}) => {
         headerName: 'Username',
         width: 150,
         editable: false,
+        renderCell: (cellValues) => {
+            return (
+              <div>
+                  <Link to={"/users/"+cellValues.row.id}> {cellValues.value}</Link>
+              </div>
+            );
+          }
     }]
 
     return (

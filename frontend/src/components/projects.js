@@ -66,6 +66,13 @@ const Projects = ({projects}) => {
             headerName: 'Project ID',
             width: 150,
             editable: false,
+            renderCell: (cellValues) => {
+                return (
+                  <div>
+                      <Link to={"/projects/"+cellValues.value}> {cellValues.value}</Link>
+                  </div>
+                );
+              }
         },
         {
             field: 'repositoryUrl',
@@ -84,6 +91,15 @@ const Projects = ({projects}) => {
             headerName: 'Users',
             width: 150,
             editable: false,
+            renderCell: (cellValues) => {
+                return (
+                  <div>
+                      {cellValues.value.map((id) => {
+                          return <Link to={'/users/' + id} key={id}> {id}</Link>
+                      })}
+                  </div>
+                );
+              }
         }
     ]
 
