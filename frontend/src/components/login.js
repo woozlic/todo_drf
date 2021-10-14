@@ -1,5 +1,9 @@
 import React from "react";
 import {useState} from "react";
+import {CardHeader, Grid, TextField} from "@mui/material";
+import {Button} from "@mui/material"
+import {Card, CardContent} from "@mui/material";
+
 
 export default function LoginForm(props) {
     const [username, setUsername] = useState('')
@@ -19,13 +23,39 @@ export default function LoginForm(props) {
         event.preventDefault()
     }
     return (
-        <div>
-            <div>Login page</div>
-            <form onSubmit={(event => handleSubmit(event))}>
-                <input type="text" name="username" placeholder="Username" value={username} onChange={(event => handleChange(event))} />
-                <input type="password" name="password" placeholder="Password" value={password} onChange={(event => handleChange(event))} />
-                <input type="submit" value="Login" />
-            </form>
-        </div>
+        <Card>
+            <CardContent>
+                <Grid component="form" onSubmit={(event => handleSubmit(event))}>
+                    <Grid container justifyContent="center">
+                        <CardContent>
+                            <TextField
+                                id="outlined-basic"
+                                label="Username"
+                                type="username"
+                                name="username"
+                                value={username}
+                                onChange={(event => handleChange(event))}
+                            />
+                        </CardContent>
+                    </Grid>
+                    <Grid container justifyContent="center">
+                        <CardContent>
+                            <TextField
+                                id="outlined-password-input"
+                                label="Password"
+                                type="password"
+                                name="password"
+                                autoComplete="current-password"
+                                value={password}
+                                onChange={(event => handleChange(event))}
+                            />
+                        </CardContent>
+                    </Grid>
+                    <Grid container justifyContent="center">
+                        <Button type="submit" variant="contained" style={{margin: "0 auto"}}>Login</Button>
+                    </Grid>
+                </Grid>
+            </CardContent>
+        </Card>
     )
 }
