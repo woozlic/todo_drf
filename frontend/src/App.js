@@ -2,7 +2,6 @@ import React from 'react'
 import './App.css';
 import axios from "axios";
 import Menu from "./components/menu";
-import Footer from "./components/footer";
 import UserList from "./components/users";
 import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 import NotFound from "./components/notfound";

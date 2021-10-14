@@ -4,10 +4,12 @@ import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import TodoList from "./todo";
+import { DataGrid } from '@mui/x-data-grid';
 
 const Project = ({getHeaders}) => {
     const [project, setProject] = useState({})
     const {id} = useParams()
+
     useEffect(() => {
         let isMounted = true
         axios.get(`http://127.0.0.1:8000/api/projects/${id}`, {headers: getHeaders()})
@@ -21,6 +23,7 @@ const Project = ({getHeaders}) => {
             })
         return () => { isMounted = false }
     }, [id, getHeaders])
+
     return (
         <div>
             {project.users
@@ -57,21 +60,45 @@ const ProjectItem = ({project}) => {
 }
 
 const Projects = ({projects}) => {
+    const columns = [
+        {
+            field: 'id',
+            headerName: 'Project ID',
+            width: 150,
+            editable: false,
+        },
+        {
+            field: 'repositoryUrl',
+            headerName: 'Repository URL',
+            width: 300,
+            editable: false,
+        },
+        {
+            field: 'title',
+            headerName: 'Title',
+            width: 200,
+            editable: false,
+        },
+        {
+            field: 'users',
+            headerName: 'Users',
+            width: 150,
+            editable: false,
+        }
+    ]
 
     return(
-        <table>
-            <tbody>
-            <tr>
-                <td>Project id</td>
-                <td>Title</td>
-                <td>Repository</td>
-                <td>Users</td>
-            </tr>
-            {projects.map(project => {
-                return <ProjectItem project={project} key={project.id}/>
-            })}
-            </tbody>
-        </table>
+        <div>
+            <div style={{ height: 400, width: 800, margin: "0 auto"}}>
+                <DataGrid
+                    rows={projects}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    disableSelectionOnClick
+                />
+            </div>
+        </div>
     )
 }
 
