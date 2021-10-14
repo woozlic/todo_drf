@@ -100,7 +100,6 @@ class App extends React.Component {
     return (
         <div>
           <BrowserRouter>
-              <Menu isAuthenticated={this.isAuthenticated.bind(this)} logout={() => { this.logout()}} getUsername={this.getUsername.bind(this)} />
               <Switch>
                   <Route exact path='/' render={() => (<Redirect to='/projects' />)} />
                   <Route exact path='/users' component={() => <UserList users={this.state.users} />} />
@@ -110,7 +109,7 @@ class App extends React.Component {
                   <Route path={'/users/:id'} component={() => <UserProfile getHeaders={this.getHeaders.bind(this)} />} />
                   <Route component={NotFound} />
               </Switch>
-              <Footer />
+              <Menu isAuthenticated={this.isAuthenticated.bind(this)} logout={() => { this.logout()}} getUsername={this.getUsername.bind(this)} />
           </BrowserRouter>
         </div>
     )
