@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 
-const UserProfile = () => {
+const UserProfile = ({getHeaders}) => {
     const [user, setUser] = useState({})
     const {id} = useParams()
     useEffect(() => {
       let isMounted = true
-      axios.get(`http://127.0.0.1:8000/api/users/${id}`)
+      axios.get(`http://127.0.0.1:8000/api/users/${id}`, {headers: getHeaders()})
         .then((data) => {
             if (isMounted) {
                 setUser(data.data)
@@ -19,7 +19,7 @@ const UserProfile = () => {
             console.log(err)
         })
         return () => { isMounted = false }
-    }, [id])
+    }, [id, getHeaders])
     return(
         <div>
             {

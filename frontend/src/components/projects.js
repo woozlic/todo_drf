@@ -5,12 +5,12 @@ import {useParams} from "react-router-dom";
 import axios from "axios";
 import TodoList from "./todo";
 
-const Project = () => {
+const Project = ({getHeaders}) => {
     const [project, setProject] = useState({})
     const {id} = useParams()
     useEffect(() => {
         let isMounted = true
-        axios.get(`http://127.0.0.1:8000/api/projects/${id}`)
+        axios.get(`http://127.0.0.1:8000/api/projects/${id}`, {headers: getHeaders()})
             .then((data) => {
                 if (isMounted) {
                     setProject(data.data)
@@ -20,7 +20,7 @@ const Project = () => {
                 console.log(err)
             })
         return () => { isMounted = false }
-    }, [id])
+    }, [id, getHeaders])
     return (
         <div>
             {project.users
@@ -68,7 +68,7 @@ const Projects = ({projects}) => {
                 <td>Users</td>
             </tr>
             {projects.map(project => {
-                return <ProjectItem project={project}/>
+                return <ProjectItem project={project} key={project.id}/>
             })}
             </tbody>
         </table>
