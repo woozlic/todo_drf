@@ -37,15 +37,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
+
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'drf_yasg',
+    'graphene_django',
 
     'user',
     'todo',
 ]
+
+GRAPHENE = {
+    "SCHEMA": "todo_drf.schema.schema"
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
