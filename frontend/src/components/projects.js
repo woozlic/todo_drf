@@ -105,7 +105,7 @@ const Projects = ({projects}) => {
 
     return(
         <div>
-            <div style={{ height: 400, width: 800, margin: "0 auto"}}>
+            <div className="card">
                 <DataGrid
                     rows={projects}
                     columns={columns}

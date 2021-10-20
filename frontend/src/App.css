@@ -13,7 +13,15 @@
   }
 }
 
-.
+.card {
+  width: 800px;
+  height: 400px;
+}
+
+.grid {
+  margin: 0 auto;
+  margin-top: 20px;
+}
 
 .App-header {
   background-color: #282c34;

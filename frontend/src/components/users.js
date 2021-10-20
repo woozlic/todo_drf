@@ -3,6 +3,7 @@ import {Link, useParams} from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { DataGrid } from '@mui/x-data-grid';
+import {Card, CardContent, CardHeader, List, ListItem, ListItemText, ListSubheader, Typography} from "@mui/material";
 
 
 const UserProfile = ({getHeaders}) => {
@@ -91,16 +92,21 @@ const UserList = ({users}) => {
     }]
 
     return (
-        <div style={{ height: 400, width: 800, margin: "0 auto"}}>
-            <DataGrid
-                rows={users}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                disableSelectionOnClick
-            />
+        <div>
+            <Typography variant="h5" sx={{textAlign: "center"}}>Users</Typography>
+            {users.map((user) => {
+                return (
+                    <Card sx={{width: "100%", marginTop: "20px"}}>
+                        <CardHeader title={user.firstName + ' ' + user.lastName} />
+                        <CardContent>
+                            <Typography>Email: <Typography variant="overline">{user.email}</Typography></Typography>
+                            <Typography>Username: <Typography variant="overline">{user.username}</Typography></Typography>
+                        </CardContent>
+                    </Card>
+                )
+            })}
         </div>
-    )
+        )
 }
 
 export { UserProfile }

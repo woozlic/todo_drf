@@ -3,6 +3,7 @@ import {useState} from "react";
 import {CardHeader, Grid, TextField} from "@mui/material";
 import {Button} from "@mui/material"
 import {Card, CardContent} from "@mui/material";
+import {Redirect} from "react-router-dom";
 
 
 export default function LoginForm(props) {
@@ -24,6 +25,7 @@ export default function LoginForm(props) {
     }
     return (
         <Card>
+        {props.isAuthenticated() && <Redirect to='/' />}
             <CardContent>
                 <Grid component="form" onSubmit={(event => handleSubmit(event))}>
                     <Grid container justifyContent="center">
