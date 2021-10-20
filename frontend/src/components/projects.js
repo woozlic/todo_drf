@@ -5,6 +5,7 @@ import {useParams} from "react-router-dom";
 import axios from "axios";
 import TodoList from "./todo";
 import { DataGrid } from '@mui/x-data-grid';
+import {Card, CardContent, CardHeader, Typography} from "@mui/material";
 
 const Project = ({getHeaders}) => {
     const [project, setProject] = useState({})
@@ -59,7 +60,7 @@ const ProjectItem = ({project}) => {
     )
 }
 
-const Projects = ({projects}) => {
+const Projects = ({users, projects}) => {
     const columns = [
         {
             field: 'id',
@@ -105,15 +106,27 @@ const Projects = ({projects}) => {
 
     return(
         <div>
-            <div className="card">
-                <DataGrid
-                    rows={projects}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    disableSelectionOnClick
-                />
-            </div>
+            <Typography variant="h5" sx={{textAlign: "center"}}>Projects</Typography>
+            {projects.map((project) => {
+                return (
+                    <Card sx={{width: "100%", marginTop: "20px"}}>
+                        <CardHeader title={project.title} />
+                        <CardContent>
+                            <Typography>Repository: <Typography variant="overline">{project.repositoryUrl}</Typography></Typography>
+                            <Typography>Users:</Typography>
+                            {project.users.map(userId => {
+                                return (
+                                    <div>
+                                        <Typography variant="overline">
+                                            <Link to={'/users/' + userId}>{users.filter(u => u.id === userId)[0].username}</Link>
+                                        </Typography>
+                                    </div>
+                                )
+                            })}
+                        </CardContent>
+                    </Card>
+                )
+            })}
         </div>
     )
 }
