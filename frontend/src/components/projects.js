@@ -4,7 +4,6 @@ import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import TodoList from "./todo";
-import { DataGrid } from '@mui/x-data-grid';
 import {Card, CardContent, CardHeader, Typography} from "@mui/material";
 
 const Project = ({getHeaders}) => {
@@ -47,62 +46,7 @@ const Project = ({getHeaders}) => {
     )
 }
 
-const ProjectItem = ({project}) => {
-    return (
-        <tr>
-            <td>{project.id}</td>
-            <td><Link to={`projects/${project.id}`}>{project.title}</Link></td>
-            <td>{project.repositoryUrl}</td>
-            <td>{project.users.map(user => {
-                return <Link to={`users/${user}`} key={user}>{user} </Link>
-            })}</td>
-        </tr>
-    )
-}
-
 const Projects = ({users, projects}) => {
-    const columns = [
-        {
-            field: 'id',
-            headerName: 'Project ID',
-            width: 150,
-            editable: false,
-            renderCell: (cellValues) => {
-                return (
-                  <div>
-                      <Link to={"/projects/"+cellValues.value}> {cellValues.value}</Link>
-                  </div>
-                );
-              }
-        },
-        {
-            field: 'repositoryUrl',
-            headerName: 'Repository URL',
-            width: 300,
-            editable: false,
-        },
-        {
-            field: 'title',
-            headerName: 'Title',
-            width: 200,
-            editable: false,
-        },
-        {
-            field: 'users',
-            headerName: 'Users',
-            width: 150,
-            editable: false,
-            renderCell: (cellValues) => {
-                return (
-                  <div>
-                      {cellValues.value.map((id) => {
-                          return <Link to={'/users/' + id} key={id}> {id}</Link>
-                      })}
-                  </div>
-                );
-              }
-        }
-    ]
 
     return(
         <div>

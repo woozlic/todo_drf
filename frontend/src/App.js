@@ -9,7 +9,7 @@ import Projects from "./components/projects";
 import {UserProfile} from "./components/users";
 import {Project} from "./components/projects";
 import LoginForm from "./components/login";
-import {Box, Grid} from "@mui/material";
+import {Box} from "@mui/material";
 
 class App extends React.Component {
   constructor(props) {

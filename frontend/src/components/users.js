@@ -1,9 +1,8 @@
 import React from "react";
-import {Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { DataGrid } from '@mui/x-data-grid';
-import {Card, CardContent, CardHeader, List, ListItem, ListItemText, ListSubheader, Typography} from "@mui/material";
+import {Card, CardContent, CardHeader, Typography} from "@mui/material";
 
 
 const UserProfile = ({getHeaders}) => {
@@ -45,51 +44,7 @@ const UserProfile = ({getHeaders}) => {
     )
 }
 
-const UserItem = ({user}) => {
-    return (
-        <tr>
-            <td>{user.firstName}</td>
-            <td>{user.lastName}</td>
-            <td>{user.email}</td>
-            <td><Link to={`users/${user.id}`}>{user.username}</Link></td>
-        </tr>
-    )
-}
-
 const UserList = ({users}) => {
-
-    const columns = [
-    {
-        field: 'firstName',
-        headerName: 'First name',
-        width: 150,
-        editable: false,
-    },
-    {
-        field: 'lastName',
-        headerName: 'Last name',
-        width: 300,
-        editable: false,
-    },
-    {
-        field: 'email',
-        headerName: 'Email',
-        width: 200,
-        editable: false,
-    },
-    {
-        field: 'username',
-        headerName: 'Username',
-        width: 150,
-        editable: false,
-        renderCell: (cellValues) => {
-            return (
-              <div>
-                  <Link to={"/users/"+cellValues.row.id}> {cellValues.value}</Link>
-              </div>
-            );
-          }
-    }]
 
     return (
         <div>

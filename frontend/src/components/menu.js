@@ -3,7 +3,6 @@ import {Link} from "react-router-dom";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import Box from '@mui/material/Box';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
