@@ -87,7 +87,7 @@ class App extends React.Component {
         })
         .catch(error => {
             this.setState({'projects': []})
-          console.log(error)
+            console.log(error)
         })
   }
 

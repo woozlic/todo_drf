@@ -62,7 +62,7 @@ const Projects = ({users, projects}) => {
                                 return (
                                     <div>
                                         <Typography variant="overline">
-                                            <Link to={'/users/' + userId}>{users.filter(u => u.id === userId)[0].username}</Link>
+                                            <Link to={'/users/' + userId}>{users.filter(u => u.id === userId)[0] && users.filter(u => u.id === userId)[0].username}</Link>
                                         </Typography>
                                     </div>
                                 )
