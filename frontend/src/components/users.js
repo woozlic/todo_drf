@@ -36,10 +36,10 @@ const UserProfile = ({getHeaders}) => {
                             <Typography>Email: {user.email}</Typography>
                         </CardContent>
                     </Card>
-                        :
-                        <Typography>
-                            Can't receive profile data
-                        </Typography>
+                    :
+                    <Typography>
+                        Can't receive profile data
+                    </Typography>
             }
         </div>
     )
@@ -52,7 +52,7 @@ const UserList = ({users}) => {
             <Typography variant="h5" sx={{textAlign: "center"}}>Users</Typography>
             {users.map((user) => {
                 return (
-                    <Card sx={{width: "100%", marginTop: "20px"}}>
+                    <Card sx={{width: "100%", marginTop: "20px"}} key={user.id}>
                         <Link to={'/users/'+user.id}><CardHeader title={user.firstName + ' ' + user.lastName} /></Link>
                         <CardContent>
                             <Typography>Email: <Typography variant="overline">{user.email}</Typography></Typography>

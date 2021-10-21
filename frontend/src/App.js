@@ -105,7 +105,7 @@ class App extends React.Component {
                   <Route exact path='/users' component={() => <UserList users={this.state.users} />} />
                   <Route exact path='/projects' component={() => <Projects users={this.state.users} projects={this.state.projects} getHeaders={this.getHeaders.bind(this)} />} />
                   <Route exact path='/login' component={() => <LoginForm getToken={(username, password) => {this.getToken(username, password)}} isAuthenticated={this.isAuthenticated.bind(this)} />} />
-                  <Route path={'/projects/:id'} component={() => <Project getHeaders={this.getHeaders.bind(this)} /> } />
+                  <Route path={'/projects/:id'} component={() => <Project users={this.state.users} getHeaders={this.getHeaders.bind(this)} /> } />
                   <Route path={'/users/:id'} component={() => <UserProfile getHeaders={this.getHeaders.bind(this)} />} />
                   <Route component={NotFound} />
               </Switch>
