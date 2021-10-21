@@ -3,6 +3,7 @@ import {useParams} from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import {Card, CardContent, CardHeader, Typography} from "@mui/material";
+import {Link} from 'react-router-dom'
 
 
 const UserProfile = ({getHeaders}) => {
@@ -27,18 +28,18 @@ const UserProfile = ({getHeaders}) => {
         <div>
             {
                 user ?
-                    <div>
-                        <div>Профиль пользователя {user.username}</div>
-                        <div>
-                            <p>Имя: {user.firstName}</p>
-                            <p>Фамилия: {user.lastName}</p>
-                            <p>Email: {user.email}</p>
-                        </div>
-                    </div>
+                    <Card>
+                        <CardHeader title={`Профиль пользователя ${user.username}`} />
+                        <CardContent>
+                            <Typography>First name: {user.firstName}</Typography>
+                            <Typography>Last name: {user.lastName}</Typography>
+                            <Typography>Email: {user.email}</Typography>
+                        </CardContent>
+                    </Card>
                         :
-                        <div>
-                            Не удалось получить данные профиля
-                        </div>
+                        <Typography>
+                            Can't receive profile data
+                        </Typography>
             }
         </div>
     )
@@ -52,7 +53,7 @@ const UserList = ({users}) => {
             {users.map((user) => {
                 return (
                     <Card sx={{width: "100%", marginTop: "20px"}}>
-                        <CardHeader title={user.firstName + ' ' + user.lastName} />
+                        <Link to={'/users/'+user.id}><CardHeader title={user.firstName + ' ' + user.lastName} /></Link>
                         <CardContent>
                             <Typography>Email: <Typography variant="overline">{user.email}</Typography></Typography>
                             <Typography>Username: <Typography variant="overline">{user.username}</Typography></Typography>
