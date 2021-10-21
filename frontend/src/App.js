@@ -69,6 +69,7 @@ class App extends React.Component {
 
   loadData(){
       const headers = this.getHeaders()
+      console.log(headers)
       axios.get('http://127.0.0.1:8000/api/users/', {headers})
         .then(data => {
             this.setState({
@@ -93,7 +94,6 @@ class App extends React.Component {
 
   componentDidMount() {
      this.getTokenFromStorage()
-     this.loadData()
   }
 
   render() {
