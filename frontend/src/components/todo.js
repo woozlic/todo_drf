@@ -5,11 +5,12 @@ const Todo = (todo) => {
     return <div>{todo.todo.text}</div>
 }
 
-function TodoList({projectId}){
+function TodoList({projectId, getHeaders}){
     const [todos, setTodos] = useState([])
     useEffect(() => {
         let isMounted = true
-        axios.get(`http://127.0.0.1:8000/api/todos/?project=${projectId}`)
+        const headers = getHeaders()
+        axios.get(`http://127.0.0.1:8000/api/todos/?project=${projectId}`, {headers})
             .then((data) => {
                 if (isMounted) {
                     setTodos(data.data.results)
@@ -19,7 +20,7 @@ function TodoList({projectId}){
                 console.log(err)
             })
         return () => { isMounted = false }
-    }, [projectId])
+    }, [projectId, getHeaders])
     return (
         <div>
             <h3>Todos:</h3>

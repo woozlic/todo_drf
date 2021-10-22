@@ -9,6 +9,8 @@ import Projects from "./components/projects";
 import {UserProfile} from "./components/users";
 import {Project} from "./components/projects";
 import LoginForm from "./components/login";
+import {Box} from "@mui/material";
+
 
 class App extends React.Component {
   constructor(props) {
@@ -68,6 +70,7 @@ class App extends React.Component {
 
   loadData(){
       const headers = this.getHeaders()
+      console.log(headers)
       axios.get('http://127.0.0.1:8000/api/users/', {headers})
         .then(data => {
             this.setState({
@@ -86,31 +89,30 @@ class App extends React.Component {
         })
         .catch(error => {
             this.setState({'projects': []})
-          console.log(error)
+            console.log(error)
         })
   }
 
   componentDidMount() {
      this.getTokenFromStorage()
-     this.loadData()
   }
 
   render() {
     return (
-        <div>
+        <Box sx={{display: "flex", justifyContent: "center", pb: 8}}>
           <BrowserRouter>
               <Switch>
                   <Route exact path='/' render={() => (<Redirect to='/projects' />)} />
                   <Route exact path='/users' component={() => <UserList users={this.state.users} />} />
-                  <Route exact path='/projects' component={() => <Projects projects={this.state.projects} getHeaders={this.getHeaders.bind(this)} />} />
-                  <Route exact path='/login' component={() => <LoginForm getToken={(username, password) => {this.getToken(username, password)}} />} />
-                  <Route path={'/projects/:id'} component={() => <Project getHeaders={this.getHeaders.bind(this)} /> } />
+                  <Route exact path='/projects' component={() => <Projects users={this.state.users} projects={this.state.projects} getHeaders={this.getHeaders.bind(this)} />} />
+                  <Route exact path='/login' component={() => <LoginForm getToken={(username, password) => {this.getToken(username, password)}} isAuthenticated={this.isAuthenticated.bind(this)} />} />
+                  <Route path={'/projects/:id'} component={() => <Project users={this.state.users} getHeaders={this.getHeaders.bind(this)} /> } />
                   <Route path={'/users/:id'} component={() => <UserProfile getHeaders={this.getHeaders.bind(this)} />} />
                   <Route component={NotFound} />
               </Switch>
               <Menu isAuthenticated={this.isAuthenticated.bind(this)} logout={() => { this.logout()}} getUsername={this.getUsername.bind(this)} />
           </BrowserRouter>
-        </div>
+        </Box>
     )
   }
 }

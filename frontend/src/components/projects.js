@@ -4,9 +4,9 @@ import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import TodoList from "./todo";
-import { DataGrid } from '@mui/x-data-grid';
+import {Card, CardContent, CardHeader, Typography} from "@mui/material";
 
-const Project = ({getHeaders}) => {
+const Project = ({users, getHeaders}) => {
     const [project, setProject] = useState({})
     const {id} = useParams()
 
@@ -25,95 +25,54 @@ const Project = ({getHeaders}) => {
     }, [id, getHeaders])
 
     return (
-        <div>
+        <Card>
             {project.users
                 ?
                 <div>
-                    <p>Title: {project.title}</p>
-                    <p>Repository: {project.repositoryUrl}</p>
-                    <p>Users: {project.users.map(user => {
-                        return <Link to={`/users/${user}`} key={user}>{user} </Link>
-                })}</p>
-                    <TodoList projectId={project.id} key={project.id} />
+                    <Link to={'/projects/'+project.id}><CardHeader title={project.title} /></Link>
+                    <CardContent>
+                        <p>Repository: {project.repositoryUrl}</p>
+                        <div>Users: {project.users.map(userId => {
+                            return <p key={userId}><Link to={'/users/' + userId}>{users.filter(u => u.id === userId)[0] && users.filter(u => u.id === userId)[0].username}</Link></p>
+                    })}</div>
+                        <TodoList getHeaders={getHeaders} projectId={project.id} key={project.id} />
+                    </CardContent>
                 </div>
                 :
                 <div>
-                    Не удалось загрузить проект
+                    Can't receive project's data
                 </div>
             }
 
-        </div>
+        </Card>
     )
 }
 
-const ProjectItem = ({project}) => {
-    return (
-        <tr>
-            <td>{project.id}</td>
-            <td><Link to={`projects/${project.id}`}>{project.title}</Link></td>
-            <td>{project.repositoryUrl}</td>
-            <td>{project.users.map(user => {
-                return <Link to={`users/${user}`} key={user}>{user} </Link>
-            })}</td>
-        </tr>
-    )
-}
-
-const Projects = ({projects}) => {
-    const columns = [
-        {
-            field: 'id',
-            headerName: 'Project ID',
-            width: 150,
-            editable: false,
-            renderCell: (cellValues) => {
-                return (
-                  <div>
-                      <Link to={"/projects/"+cellValues.value}> {cellValues.value}</Link>
-                  </div>
-                );
-              }
-        },
-        {
-            field: 'repositoryUrl',
-            headerName: 'Repository URL',
-            width: 300,
-            editable: false,
-        },
-        {
-            field: 'title',
-            headerName: 'Title',
-            width: 200,
-            editable: false,
-        },
-        {
-            field: 'users',
-            headerName: 'Users',
-            width: 150,
-            editable: false,
-            renderCell: (cellValues) => {
-                return (
-                  <div>
-                      {cellValues.value.map((id) => {
-                          return <Link to={'/users/' + id} key={id}> {id}</Link>
-                      })}
-                  </div>
-                );
-              }
-        }
-    ]
+const Projects = ({users, projects}) => {
 
     return(
         <div>
-            <div style={{ height: 400, width: 800, margin: "0 auto"}}>
-                <DataGrid
-                    rows={projects}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    disableSelectionOnClick
-                />
-            </div>
+            <Typography variant="h5" sx={{textAlign: "center"}}>Projects</Typography>
+            {projects.map((project) => {
+                return (
+                    <Card sx={{width: "100%", marginTop: "20px"}} key={project.id}>
+                        <CardHeader title={<Link to={"/projects/"+project.id}>{project.title}</Link>} />
+                        <CardContent>
+                            <Typography>Repository: <Typography variant="overline">{project.repositoryUrl}</Typography></Typography>
+                            <Typography>Users:</Typography>
+                            {project.users.map(userId => {
+                                return (
+                                    <div key={userId}>
+                                        <Typography variant="overline">
+                                            <Link to={'/users/' + userId}>{users.filter(u => u.id === userId)[0] && users.filter(u => u.id === userId)[0].username}</Link>
+                                        </Typography>
+                                    </div>
+                                )
+                            })}
+                        </CardContent>
+                    </Card>
+                )
+            })}
         </div>
     )
 }
