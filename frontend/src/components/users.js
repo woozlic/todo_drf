@@ -27,7 +27,7 @@ const UserProfile = ({getHeaders}) => {
     return(
         <div>
             {
-                user ?
+                Object.keys(user).length !== 0 && user ?
                     <Card>
                         <CardHeader title={`Профиль пользователя ${user.username}`} />
                         <CardContent>
