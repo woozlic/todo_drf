@@ -48,6 +48,26 @@ class App extends React.Component {
       return headers
   }
 
+  createTodo(project, user, text) {
+      const headers = this.getHeaders()
+      const sendData = {
+          project: `http://127.0.0.1:8000/api/projects/${project}/`,
+          userOwner: `http://127.0.0.1:8000/api/users/${+user}/`,
+          text: text,
+          isActive: true
+      }
+      axios.post('http://127.0.0.1:8000/api/todos/', sendData, {headers})
+          .then(data => {
+              if (data.status === 201) {
+                  alert("Todo successfully created")
+                  this.loadData()
+              }
+          })
+          .catch(error => {
+              console.log(error)
+          })
+  }
+
   setToken(token){
       localStorage.setItem('token', token)
       this.setState({'token': token}, () => this.loadData())
@@ -151,7 +171,7 @@ class App extends React.Component {
                   <Route exact path='/login' component={() => <LoginForm getToken={(username, password) => {this.getToken(username, password)}} isAuthenticated={this.isAuthenticated.bind(this)} />} />
                   <Route path={'/projects/create'} component={() => <ProjectForm createProject={(title, repositoryUrl, users) => this.createProject(title, repositoryUrl, users)} users={this.state.users}/>} />
                   <Route path={'/todos/create'} component={() => <TodosForm />} />
-                  <Route path={'/projects/:id'} component={() => <Project deleteProject={this.deleteProject.bind(this)} users={this.state.users} getHeaders={this.getHeaders.bind(this)} /> } />
+                  <Route path={'/projects/:id'} component={() => <Project createTodo={this.createTodo.bind(this)} deleteProject={this.deleteProject.bind(this)} users={this.state.users} getHeaders={this.getHeaders.bind(this)} /> } />
                   <Route path={'/users/:id'} component={() => <UserProfile getHeaders={this.getHeaders.bind(this)} />} />
                   <Route component={NotFound} />
               </Switch>

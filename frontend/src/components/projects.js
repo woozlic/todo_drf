@@ -4,10 +4,15 @@ import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import TodoList from "./todo";
-import {Button, Card, CardContent, CardHeader, Typography} from "@mui/material";
+import {Button, Card, CardContent, CardHeader, FormControl, MenuItem, TextField, Typography} from "@mui/material";
 
-const Project = ({users, getHeaders, deleteProject}) => {
+const Project = ({users, getHeaders, deleteProject, createTodo}) => {
     const [project, setProject] = useState({})
+    const [showTodoForm, setShowTodoForm] = useState(false)
+    const [formState, setFormState] = useState({
+        user: '',
+        text: ''
+    })
     const {id} = useParams()
 
     useEffect(() => {
@@ -24,6 +29,13 @@ const Project = ({users, getHeaders, deleteProject}) => {
         return () => { isMounted = false }
     }, [id, getHeaders])
 
+    const handleFieldChange = event => {
+        event.preventDefault()
+        setFormState(formState => ({
+            ...formState,
+            [event.target.name]: event.target.value
+    }))}
+
     return (
         <Card>
             {project.users
@@ -36,6 +48,33 @@ const Project = ({users, getHeaders, deleteProject}) => {
                             return <p key={userId}><Link to={'/users/' + userId}>{users.filter(u => u.id === userId)[0] && users.filter(u => u.id === userId)[0].username}</Link></p>
                     })}</div>
                         <TodoList getHeaders={getHeaders} projectId={project.id} key={project.id} />
+                        {
+                            showTodoForm ?
+                                <FormControl className='form' margin='dense'>
+                                    <TextField
+                                        sx={{marginTop: "15px"}}
+                                        select
+                                        name="user"
+                                        id="user"
+                                        variant="outlined"
+                                        label="User owner"
+                                        SelectProps={{
+                                            value: formState.user,
+                                            onChange: handleFieldChange,
+                                        }}
+                                    >
+                                        {
+                                            project.users.map(userId => {
+                                                return <MenuItem key={userId} value={userId}>{users.filter(u => u.id === userId)[0] && users.filter(u => u.id === userId)[0].username}</MenuItem>
+                                            })
+                                        }
+                                    </TextField>
+                                    <TextField id="outlined-basic" onChange={handleFieldChange} value={formState.text} name="text" label="Text" variant="outlined" sx={{marginTop: "15px"}} />
+                                    <Button variant="outlined" onClick={() => createTodo(project.id, formState.user, formState.text)} sx={{marginTop: "15px"}}>Create TODO</Button>
+                                </FormControl>
+                                :
+                                <Button sx={{marginTop: "10px"}} onClick={() => setShowTodoForm(true)} variant="contained">Add TODO</Button>
+                        }
                     </CardContent>
                 </div>
                 :
