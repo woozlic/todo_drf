@@ -6,7 +6,7 @@ import axios from "axios";
 import TodoList from "./todo";
 import {Button, Card, CardContent, CardHeader, FormControl, MenuItem, TextField, Typography} from "@mui/material";
 
-const Project = ({users, getHeaders, deleteProject, createTodo}) => {
+const Project = ({users, getHeaders, deleteProject, createTodo, deleteTodo}) => {
     const [project, setProject] = useState({})
     const [showTodoForm, setShowTodoForm] = useState(false)
     const [formState, setFormState] = useState({
@@ -41,13 +41,13 @@ const Project = ({users, getHeaders, deleteProject, createTodo}) => {
             {project.users
                 ?
                 <div>
-                    <Link to={'/projects/'+project.id}><CardHeader title={project.title} subheader={<Button onClick={() => deleteProject(project.id)} variant="contained" color="error">Delete project</Button>} /></Link>
+                    <Link to={'/projects/'+project.id}><CardHeader title={project.title} subheader={<Button onClick={() => deleteProject(project.id)} sx={{marginTop: "10px"}} variant="contained" color="error">Delete project</Button>} /></Link>
                     <CardContent>
-                        <p>Repository: {project.repositoryUrl}</p>
+                        <p>Repository: <a href={project.repositoryUrl}>{project.repositoryUrl}</a></p>
                         <div>Users: {project.users.map(userId => {
                             return <p key={userId}><Link to={'/users/' + userId}>{users.filter(u => u.id === userId)[0] && users.filter(u => u.id === userId)[0].username}</Link></p>
                     })}</div>
-                        <TodoList getHeaders={getHeaders} projectId={project.id} key={project.id} />
+                        <TodoList deleteTodo={deleteTodo} getHeaders={getHeaders} projectId={project.id} key={project.id} />
                         {
                             showTodoForm ?
                                 <FormControl className='form' margin='dense'>
@@ -98,9 +98,9 @@ const Projects = ({users, projects, deleteProject}) => {
             {projects.map((project) => {
                 return (
                     <Card sx={{width: "100%", marginTop: "20px"}} key={project.id}>
-                        <CardHeader title={<Link to={"/projects/"+project.id}>{project.title}</Link>} subheader={<Button onClick={() => deleteProject(project.id)} variant="contained" color="error">Delete project</Button>} />
+                        <CardHeader title={<Link to={"/projects/"+project.id}>{project.title}</Link>} subheader={<Button onClick={() => deleteProject(project.id)} sx={{marginTop: "10px"}} variant="contained" color="error">Delete project</Button>} />
                         <CardContent>
-                            <Typography>Repository: <Typography variant="overline">{project.repositoryUrl}</Typography></Typography>
+                            <Typography>Repository: <Typography variant="overline"><a href={project.repositoryUrl}>{project.repositoryUrl}</a></Typography></Typography>
                             <Typography>Users:</Typography>
                             {project.users.map(userId => {
                                 return (

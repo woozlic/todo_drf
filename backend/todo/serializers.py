@@ -24,7 +24,7 @@ class ProjectSerializer(ModelSerializer):
 class TodoSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = Todo
-        fields = ['url', 'project', 'user_owner', 'text', 'is_active', 'created_datetime', 'updated_datetime']
+        fields = ['id', 'url', 'project', 'user_owner', 'text', 'is_active', 'created_datetime', 'updated_datetime']
 
         # TODO user_owner must be in project.users or to be added to project.users
 

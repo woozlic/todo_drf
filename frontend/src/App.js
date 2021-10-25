@@ -142,6 +142,18 @@ class App extends React.Component {
               }
           })
   }
+  deleteTodo(todoId) {
+      let headers = this.getHeaders()
+      axios.delete(`http://127.0.0.1:8000/api/todos/${todoId}`, {headers})
+          .then(data => {
+              if (data.status === 204){
+                  this.loadData()
+              }
+          })
+          .catch(error => {
+              console.log(error)
+          })
+  }
   deleteProject(projectId) {
       let headers = this.getHeaders()
       axios.delete(`http://127.0.0.1:8000/api/projects/${projectId}`, {headers})
@@ -171,7 +183,7 @@ class App extends React.Component {
                   <Route exact path='/login' component={() => <LoginForm getToken={(username, password) => {this.getToken(username, password)}} isAuthenticated={this.isAuthenticated.bind(this)} />} />
                   <Route path={'/projects/create'} component={() => <ProjectForm createProject={(title, repositoryUrl, users) => this.createProject(title, repositoryUrl, users)} users={this.state.users}/>} />
                   <Route path={'/todos/create'} component={() => <TodosForm />} />
-                  <Route path={'/projects/:id'} component={() => <Project createTodo={this.createTodo.bind(this)} deleteProject={this.deleteProject.bind(this)} users={this.state.users} getHeaders={this.getHeaders.bind(this)} /> } />
+                  <Route path={'/projects/:id'} component={() => <Project deleteTodo={this.deleteTodo.bind(this)} createTodo={this.createTodo.bind(this)} deleteProject={this.deleteProject.bind(this)} users={this.state.users} getHeaders={this.getHeaders.bind(this)} /> } />
                   <Route path={'/users/:id'} component={() => <UserProfile getHeaders={this.getHeaders.bind(this)} />} />
                   <Route component={NotFound} />
               </Switch>
