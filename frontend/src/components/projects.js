@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import TodoList from "./todo";
-import {Card, CardContent, CardHeader, Typography} from "@mui/material";
+import {Button, Card, CardContent, CardHeader, Typography} from "@mui/material";
 
 const Project = ({users, getHeaders}) => {
     const [project, setProject] = useState({})
@@ -52,7 +52,10 @@ const Projects = ({users, projects}) => {
 
     return(
         <div>
-            <Typography variant="h5" sx={{textAlign: "center"}}>Projects</Typography>
+            <div style={{display: "flex", justifyContent: "space-between"}}>
+                <Typography variant="h5" sx={{padding: "10px"}}>Projects</Typography>
+                <Button component={Link} to="/projects/create/" variant="contained">Create new project</Button>
+            </div>
             {projects.map((project) => {
                 return (
                     <Card sx={{width: "100%", marginTop: "20px"}} key={project.id}>

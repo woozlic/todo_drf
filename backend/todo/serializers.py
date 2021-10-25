@@ -26,6 +26,8 @@ class TodoSerializer(HyperlinkedModelSerializer):
         model = Todo
         fields = ['url', 'project', 'user_owner', 'text', 'is_active', 'created_datetime', 'updated_datetime']
 
+        # TODO user_owner must be in project.users or to be added to project.users
+
     def validate_created_datetime(self, value):
         if value > timezone.now():
             raise ValidationError("Время создания не может быть в будущем")

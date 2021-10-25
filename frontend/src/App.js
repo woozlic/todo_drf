@@ -10,6 +10,8 @@ import {UserProfile} from "./components/users";
 import {Project} from "./components/projects";
 import LoginForm from "./components/login";
 import {Box} from "@mui/material";
+import ProjectForm from "./components/projectForm";
+import TodosForm from "./components/todosForm";
 
 
 class App extends React.Component {
@@ -70,7 +72,6 @@ class App extends React.Component {
 
   loadData(){
       const headers = this.getHeaders()
-      console.log(headers)
       axios.get('http://127.0.0.1:8000/api/users/', {headers})
         .then(data => {
             this.setState({
@@ -93,6 +94,34 @@ class App extends React.Component {
         })
   }
 
+  createProject(title, repositoryUrl, users) {
+      console.log(title, repositoryUrl, users)
+      const sendData = {
+          title: title,
+          repositoryUrl: repositoryUrl,
+          users: users,
+          todos: []
+      }
+      let headers = this.getHeaders()
+      axios.post('http://127.0.0.1:8000/api/projects/', sendData, {headers})
+          .then(data => {
+              if (data.status === 201){
+                  alert('Project successfully created!')
+              }
+          })
+          .catch(error => {
+              if (error.response.data){
+                  console.log(error.response.data)
+                  const msgTitle = error.response.data.title && 'Title: ' + error.response.data.title.join('\n')
+                  const msgRepositoryUrl = error.response.data.repositoryUrl && 'Repository Url: ' + error.response.data.repositoryUrl.join('\n')
+                  const msgUsers = error.response.data.users && 'Users: ' + error.response.data.users.join('\n')
+                  msgTitle && alert(msgTitle)
+                  msgRepositoryUrl && alert(msgRepositoryUrl)
+                  msgUsers && alert(msgUsers)
+              }
+          })
+  }
+
   componentDidMount() {
      this.getTokenFromStorage()
   }
@@ -106,6 +135,8 @@ class App extends React.Component {
                   <Route exact path='/users' component={() => <UserList users={this.state.users} />} />
                   <Route exact path='/projects' component={() => <Projects users={this.state.users} projects={this.state.projects} getHeaders={this.getHeaders.bind(this)} />} />
                   <Route exact path='/login' component={() => <LoginForm getToken={(username, password) => {this.getToken(username, password)}} isAuthenticated={this.isAuthenticated.bind(this)} />} />
+                  <Route path={'/projects/create'} component={() => <ProjectForm createProject={(title, repositoryUrl, users) => this.createProject(title, repositoryUrl, users)} users={this.state.users}/>} />
+                  <Route path={'/todos/create'} component={() => <TodosForm />} />
                   <Route path={'/projects/:id'} component={() => <Project users={this.state.users} getHeaders={this.getHeaders.bind(this)} /> } />
                   <Route path={'/users/:id'} component={() => <UserProfile getHeaders={this.getHeaders.bind(this)} />} />
                   <Route component={NotFound} />
