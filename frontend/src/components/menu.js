@@ -18,12 +18,12 @@ const Menu = (props) => {
                                   setValue(newValue);
                               }}>
                 <ul style={{display: "flex", listStyleType: "none"}}>
-                    <Link to='/users'><BottomNavigationAction showLabel color="black" label="Users" icon={<PeopleAltIcon />}/></Link>
-                    <Link to='/projects'><BottomNavigationAction showLabel label="Projects" icon={<AccountTreeIcon />} /></Link>
+                    <BottomNavigationAction component={Link} to='/users' showLabel color="black" label="Users" icon={<PeopleAltIcon />}/>
+                    <BottomNavigationAction component={Link} to='/projects' showLabel label="Projects" icon={<AccountTreeIcon />} />
                     {props.isAuthenticated() ?
-                        <li><BottomNavigationAction showLabel label="Logout" onClick={() => { props.logout() }} icon={<LogoutIcon />} /></li>
+                        <BottomNavigationAction showLabel label="Logout" onClick={() => { props.logout() }} icon={<LogoutIcon />} />
                         :
-                        <Link to='/login'><BottomNavigationAction showLabel label="Login" icon={<LoginIcon />}/></Link>
+                        <BottomNavigationAction component={Link} to='/login' showLabel label="Login" icon={<LoginIcon />}/>
                     }
                 </ul>
             </BottomNavigation>
