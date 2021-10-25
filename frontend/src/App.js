@@ -101,7 +101,7 @@ class App extends React.Component {
         <div>
           <BrowserRouter>
               <Grid container spacing={1}>
-                  <Grid style={{margin: "0 auto"}}>
+                  <Grid style={{margin: "0 auto", marginTop: "20px"}}>
                       <Switch>
                           <Route exact path='/' render={() => (<Redirect to='/projects' />)} />
                           <Route exact path='/users' component={() => <UserList users={this.state.users} />} />
