@@ -107,6 +107,7 @@ class App extends React.Component {
           .then(data => {
               if (data.status === 201){
                   alert('Project successfully created!')
+                  this.loadData()
               }
           })
           .catch(error => {
@@ -121,6 +122,19 @@ class App extends React.Component {
               }
           })
   }
+  deleteProject(projectId) {
+      let headers = this.getHeaders()
+      axios.delete(`http://127.0.0.1:8000/api/projects/${projectId}`, {headers})
+          .then(data => {
+              if (data.status === 204){
+                  alert("Project deleted!")
+                  this.loadData()
+              }
+          })
+          .catch(error => {
+              console.log(error)
+          })
+  }
 
   componentDidMount() {
      this.getTokenFromStorage()
@@ -133,11 +147,11 @@ class App extends React.Component {
               <Switch>
                   <Route exact path='/' render={() => (<Redirect to='/projects' />)} />
                   <Route exact path='/users' component={() => <UserList users={this.state.users} />} />
-                  <Route exact path='/projects' component={() => <Projects users={this.state.users} projects={this.state.projects} getHeaders={this.getHeaders.bind(this)} />} />
+                  <Route exact path='/projects' component={() => <Projects deleteProject={this.deleteProject.bind(this)} users={this.state.users} projects={this.state.projects} getHeaders={this.getHeaders.bind(this)} />} />
                   <Route exact path='/login' component={() => <LoginForm getToken={(username, password) => {this.getToken(username, password)}} isAuthenticated={this.isAuthenticated.bind(this)} />} />
                   <Route path={'/projects/create'} component={() => <ProjectForm createProject={(title, repositoryUrl, users) => this.createProject(title, repositoryUrl, users)} users={this.state.users}/>} />
                   <Route path={'/todos/create'} component={() => <TodosForm />} />
-                  <Route path={'/projects/:id'} component={() => <Project users={this.state.users} getHeaders={this.getHeaders.bind(this)} /> } />
+                  <Route path={'/projects/:id'} component={() => <Project deleteProject={this.deleteProject.bind(this)} users={this.state.users} getHeaders={this.getHeaders.bind(this)} /> } />
                   <Route path={'/users/:id'} component={() => <UserProfile getHeaders={this.getHeaders.bind(this)} />} />
                   <Route component={NotFound} />
               </Switch>

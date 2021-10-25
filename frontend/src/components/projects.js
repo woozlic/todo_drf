@@ -6,7 +6,7 @@ import axios from "axios";
 import TodoList from "./todo";
 import {Button, Card, CardContent, CardHeader, Typography} from "@mui/material";
 
-const Project = ({users, getHeaders}) => {
+const Project = ({users, getHeaders, deleteProject}) => {
     const [project, setProject] = useState({})
     const {id} = useParams()
 
@@ -29,7 +29,7 @@ const Project = ({users, getHeaders}) => {
             {project.users
                 ?
                 <div>
-                    <Link to={'/projects/'+project.id}><CardHeader title={project.title} /></Link>
+                    <Link to={'/projects/'+project.id}><CardHeader title={project.title} subheader={<Button onClick={() => deleteProject(project.id)} variant="contained" color="error">Delete project</Button>} /></Link>
                     <CardContent>
                         <p>Repository: {project.repositoryUrl}</p>
                         <div>Users: {project.users.map(userId => {
@@ -48,7 +48,7 @@ const Project = ({users, getHeaders}) => {
     )
 }
 
-const Projects = ({users, projects}) => {
+const Projects = ({users, projects, deleteProject}) => {
 
     return(
         <div>
@@ -59,7 +59,7 @@ const Projects = ({users, projects}) => {
             {projects.map((project) => {
                 return (
                     <Card sx={{width: "100%", marginTop: "20px"}} key={project.id}>
-                        <CardHeader title={<Link to={"/projects/"+project.id}>{project.title}</Link>} />
+                        <CardHeader title={<Link to={"/projects/"+project.id}>{project.title}</Link>} subheader={<Button onClick={() => deleteProject(project.id)} variant="contained" color="error">Delete project</Button>} />
                         <CardContent>
                             <Typography>Repository: <Typography variant="overline">{project.repositoryUrl}</Typography></Typography>
                             <Typography>Users:</Typography>
