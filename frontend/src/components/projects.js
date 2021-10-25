@@ -88,14 +88,37 @@ const Project = ({users, getHeaders, deleteProject, createTodo, deleteTodo}) => 
 }
 
 const Projects = ({users, projects, deleteProject}) => {
+    const [searchField, setSearchField] = useState('')
+    const [filteredProjects, setFilteredProjects] = useState([])
+    const [isMounted, setIsMounted] = useState(false)
+
+    const handleFieldChange = event => {
+        setSearchField(event.target.value)
+    }
+
+    function search(event) {
+        setFilteredProjects(projects.filter(project => project.title.includes(searchField)))
+        event.preventDefault()
+    }
+
+    useEffect(() => {
+        if (!isMounted) {
+            setFilteredProjects(projects)
+        }
+        setIsMounted(true)
+    }, [isMounted])
 
     return(
         <div>
             <div style={{display: "flex", justifyContent: "space-between"}}>
+                <TextField sx={{marginTop: "15px", marginBottom: "15px", width: "100%"}} id="search" label="Search..." type="search" onChange={handleFieldChange} />
+                <Button onClick={event => search(event)}>Search</Button>
+            </div>
+            <div style={{display: "flex", justifyContent: "space-between"}}>
                 <Typography variant="h5" sx={{padding: "10px"}}>Projects</Typography>
                 <Button component={Link} to="/projects/create/" variant="contained">Create new project</Button>
             </div>
-            {projects.map((project) => {
+            {filteredProjects.map((project) => {
                 return (
                     <Card sx={{width: "100%", marginTop: "20px"}} key={project.id}>
                         <CardHeader title={<Link to={"/projects/"+project.id}>{project.title}</Link>} subheader={<Button onClick={() => deleteProject(project.id)} sx={{marginTop: "10px"}} variant="contained" color="error">Delete project</Button>} />
