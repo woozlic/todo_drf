@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
+from django.views.generic import TemplateView
 from rest_framework.permissions import AllowAny
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
@@ -40,5 +41,6 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name="schema-json"),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name="schema-swagger-ui"),
-    path('graphql/', GraphQLView.as_view(graphiql=True))
+    path('graphql/', GraphQLView.as_view(graphiql=True)),
+    path('', TemplateView.as_view(template_name='index.html'))
 ]

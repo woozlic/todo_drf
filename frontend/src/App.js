@@ -65,6 +65,9 @@ class App extends React.Component {
           })
           .catch(error => {
               console.log(error)
+              if (error.response.status === 403){
+                  alert("You have to login in order to add todos")
+              }
           })
   }
 
@@ -140,6 +143,9 @@ class App extends React.Component {
                   msgRepositoryUrl && alert(msgRepositoryUrl)
                   msgUsers && alert(msgUsers)
               }
+              if (error.response.status === 403){
+                  alert("You have to login in order to create project")
+              }
           })
   }
   deleteTodo(todoId) {
@@ -152,19 +158,26 @@ class App extends React.Component {
           })
           .catch(error => {
               console.log(error)
+              if (error){
+                  alert("You have to login in order to delete todos")
+              }
           })
   }
   deleteProject(projectId) {
       let headers = this.getHeaders()
       axios.delete(`http://127.0.0.1:8000/api/projects/${projectId}`, {headers})
           .then(data => {
+              console.log(data)
               if (data.status === 204){
                   alert("Project deleted!")
                   this.loadData()
               }
           })
           .catch(error => {
-              console.log(error)
+              console.log('a ' + error)
+              if (error){
+                  alert("You have to login in order to delete projects")
+              }
           })
   }
 
