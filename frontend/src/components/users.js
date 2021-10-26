@@ -1,8 +1,9 @@
 import React from "react";
-import {Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { DataGrid } from '@mui/x-data-grid';
+import {Card, CardContent, CardHeader, Typography} from "@mui/material";
+import {Link} from 'react-router-dom'
 
 
 const UserProfile = ({getHeaders}) => {
@@ -26,81 +27,42 @@ const UserProfile = ({getHeaders}) => {
     return(
         <div>
             {
-                user ?
-                    <div>
-                        <div>Профиль пользователя {user.username}</div>
-                        <div>
-                            <p>Имя: {user.firstName}</p>
-                            <p>Фамилия: {user.lastName}</p>
-                            <p>Email: {user.email}</p>
-                        </div>
-                    </div>
-                        :
-                        <div>
-                            Не удалось получить данные профиля
-                        </div>
+                Object.keys(user).length !== 0 && user ?
+                    <Card>
+                        <CardHeader title={`Профиль пользователя ${user.username}`} />
+                        <CardContent>
+                            <Typography>First name: {user.firstName}</Typography>
+                            <Typography>Last name: {user.lastName}</Typography>
+                            <Typography>Email: {user.email}</Typography>
+                        </CardContent>
+                    </Card>
+                    :
+                    <Typography>
+                        Can't receive profile data
+                    </Typography>
             }
         </div>
     )
 }
 
-const UserItem = ({user}) => {
-    return (
-        <tr>
-            <td>{user.firstName}</td>
-            <td>{user.lastName}</td>
-            <td>{user.email}</td>
-            <td><Link to={`users/${user.id}`}>{user.username}</Link></td>
-        </tr>
-    )
-}
-
 const UserList = ({users}) => {
 
-    const columns = [
-    {
-        field: 'firstName',
-        headerName: 'First name',
-        width: 150,
-        editable: false,
-    },
-    {
-        field: 'lastName',
-        headerName: 'Last name',
-        width: 300,
-        editable: false,
-    },
-    {
-        field: 'email',
-        headerName: 'Email',
-        width: 200,
-        editable: false,
-    },
-    {
-        field: 'username',
-        headerName: 'Username',
-        width: 150,
-        editable: false,
-        renderCell: (cellValues) => {
-            return (
-              <div>
-                  <Link to={"/users/"+cellValues.row.id}> {cellValues.value}</Link>
-              </div>
-            );
-          }
-    }]
-
     return (
-        <div style={{ height: 400, width: 800, margin: "0 auto"}}>
-            <DataGrid
-                rows={users}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                disableSelectionOnClick
-            />
+        <div>
+            <Typography variant="h5" sx={{textAlign: "center"}}>Users</Typography>
+            {users.map((user) => {
+                return (
+                    <Card sx={{width: "100%", marginTop: "20px"}} key={user.id}>
+                        <Link to={'/users/'+user.id}><CardHeader title={user.firstName + ' ' + user.lastName} /></Link>
+                        <CardContent>
+                            <Typography>Email: <Typography variant="overline">{user.email}</Typography></Typography>
+                            <Typography>Username: <Typography variant="overline">{user.username}</Typography></Typography>
+                        </CardContent>
+                    </Card>
+                )
+            })}
         </div>
-    )
+        )
 }
 
 export { UserProfile }

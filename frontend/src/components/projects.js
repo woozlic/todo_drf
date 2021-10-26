@@ -4,10 +4,15 @@ import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import TodoList from "./todo";
-import { DataGrid } from '@mui/x-data-grid';
+import {Button, Card, CardContent, CardHeader, FormControl, MenuItem, TextField, Typography} from "@mui/material";
 
-const Project = ({getHeaders}) => {
+const Project = ({users, getHeaders, deleteProject, createTodo, deleteTodo}) => {
     const [project, setProject] = useState({})
+    const [showTodoForm, setShowTodoForm] = useState(false)
+    const [formState, setFormState] = useState({
+        user: '',
+        text: ''
+    })
     const {id} = useParams()
 
     useEffect(() => {
@@ -24,96 +29,115 @@ const Project = ({getHeaders}) => {
         return () => { isMounted = false }
     }, [id, getHeaders])
 
+    const handleFieldChange = event => {
+        event.preventDefault()
+        setFormState(formState => ({
+            ...formState,
+            [event.target.name]: event.target.value
+    }))}
+
     return (
-        <div>
+        <Card>
             {project.users
                 ?
                 <div>
-                    <p>Title: {project.title}</p>
-                    <p>Repository: {project.repositoryUrl}</p>
-                    <p>Users: {project.users.map(user => {
-                        return <Link to={`/users/${user}`} key={user}>{user} </Link>
-                })}</p>
-                    <TodoList projectId={project.id} key={project.id} />
+                    <Link to={'/projects/'+project.id}><CardHeader title={project.title} subheader={<Button onClick={() => deleteProject(project.id)} sx={{marginTop: "10px"}} variant="contained" color="error">Delete project</Button>} /></Link>
+                    <CardContent>
+                        <p>Repository: <a href={project.repositoryUrl}>{project.repositoryUrl}</a></p>
+                        <div>Users: {project.users.map(userId => {
+                            return <p key={userId}><Link to={'/users/' + userId}>{users.filter(u => u.id === userId)[0] && users.filter(u => u.id === userId)[0].username}</Link></p>
+                    })}</div>
+                        <TodoList deleteTodo={deleteTodo} getHeaders={getHeaders} projectId={project.id} key={project.id} />
+                        {
+                            showTodoForm ?
+                                <FormControl className='form' margin='dense'>
+                                    <TextField
+                                        sx={{marginTop: "15px"}}
+                                        select
+                                        name="user"
+                                        id="user"
+                                        variant="outlined"
+                                        label="User owner"
+                                        SelectProps={{
+                                            value: formState.user,
+                                            onChange: handleFieldChange,
+                                        }}
+                                    >
+                                        {
+                                            project.users.map(userId => {
+                                                return <MenuItem key={userId} value={userId}>{users.filter(u => u.id === userId)[0] && users.filter(u => u.id === userId)[0].username}</MenuItem>
+                                            })
+                                        }
+                                    </TextField>
+                                    <TextField id="outlined-basic" onChange={handleFieldChange} value={formState.text} name="text" label="Text" variant="outlined" sx={{marginTop: "15px"}} />
+                                    <Button variant="outlined" onClick={() => createTodo(project.id, formState.user, formState.text)} sx={{marginTop: "15px"}}>Create TODO</Button>
+                                </FormControl>
+                                :
+                                <Button sx={{marginTop: "10px"}} onClick={() => setShowTodoForm(true)} variant="contained">Add TODO</Button>
+                        }
+                    </CardContent>
                 </div>
                 :
                 <div>
-                    Не удалось загрузить проект
+                    Can't receive project's data
                 </div>
             }
 
-        </div>
+        </Card>
     )
 }
 
-const ProjectItem = ({project}) => {
-    return (
-        <tr>
-            <td>{project.id}</td>
-            <td><Link to={`projects/${project.id}`}>{project.title}</Link></td>
-            <td>{project.repositoryUrl}</td>
-            <td>{project.users.map(user => {
-                return <Link to={`users/${user}`} key={user}>{user} </Link>
-            })}</td>
-        </tr>
-    )
-}
+const Projects = ({users, projects, deleteProject}) => {
+    const [searchField, setSearchField] = useState('')
+    const [filteredProjects, setFilteredProjects] = useState([])
+    const [isMounted, setIsMounted] = useState(false)
 
-const Projects = ({projects}) => {
-    const columns = [
-        {
-            field: 'id',
-            headerName: 'Project ID',
-            width: 150,
-            editable: false,
-            renderCell: (cellValues) => {
-                return (
-                  <div>
-                      <Link to={"/projects/"+cellValues.value}> {cellValues.value}</Link>
-                  </div>
-                );
-              }
-        },
-        {
-            field: 'repositoryUrl',
-            headerName: 'Repository URL',
-            width: 300,
-            editable: false,
-        },
-        {
-            field: 'title',
-            headerName: 'Title',
-            width: 200,
-            editable: false,
-        },
-        {
-            field: 'users',
-            headerName: 'Users',
-            width: 150,
-            editable: false,
-            renderCell: (cellValues) => {
-                return (
-                  <div>
-                      {cellValues.value.map((id) => {
-                          return <Link to={'/users/' + id} key={id}> {id}</Link>
-                      })}
-                  </div>
-                );
-              }
+    const handleFieldChange = event => {
+        setSearchField(event.target.value)
+    }
+
+    function search(event) {
+        setFilteredProjects(projects.filter(project => project.title.includes(searchField)))
+        event.preventDefault()
+    }
+
+    useEffect(() => {
+        if (!isMounted) {
+            setFilteredProjects(projects)
         }
-    ]
+        setIsMounted(true)
+    }, [isMounted])
 
     return(
         <div>
-            <div style={{ height: 400, width: 800, margin: "0 auto"}}>
-                <DataGrid
-                    rows={projects}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    disableSelectionOnClick
-                />
+            <div style={{display: "flex", justifyContent: "space-between"}}>
+                <TextField sx={{marginTop: "15px", marginBottom: "15px", width: "100%"}} id="search" label="Search..." type="search" onChange={handleFieldChange} />
+                <Button onClick={event => search(event)}>Search</Button>
             </div>
+            <div style={{display: "flex", justifyContent: "space-between"}}>
+                <Typography variant="h5" sx={{padding: "10px"}}>Projects</Typography>
+                <Button component={Link} to="/projects/create/" variant="contained">Create new project</Button>
+            </div>
+            {filteredProjects.map((project) => {
+                return (
+                    <Card sx={{width: "100%", marginTop: "20px"}} key={project.id}>
+                        <CardHeader title={<Link to={"/projects/"+project.id}>{project.title}</Link>} subheader={<Button onClick={() => deleteProject(project.id)} sx={{marginTop: "10px"}} variant="contained" color="error">Delete project</Button>} />
+                        <CardContent>
+                            <Typography>Repository: <Typography variant="overline"><a href={project.repositoryUrl}>{project.repositoryUrl}</a></Typography></Typography>
+                            <Typography>Users:</Typography>
+                            {project.users.map(userId => {
+                                return (
+                                    <div key={userId}>
+                                        <Typography variant="overline">
+                                            <Link to={'/users/' + userId}>{users.filter(u => u.id === userId)[0] && users.filter(u => u.id === userId)[0].username}</Link>
+                                        </Typography>
+                                    </div>
+                                )
+                            })}
+                        </CardContent>
+                    </Card>
+                )
+            })}
         </div>
     )
 }

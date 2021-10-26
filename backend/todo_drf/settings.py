@@ -67,7 +67,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'],
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.BasicAuthentication',
-                                       'rest_framework.authentication.SessionAuthentication',
+                                       'todo_drf.auth.CustomSessionAuthentication',
                                        'rest_framework.authentication.TokenAuthentication',
                                        'rest_framework_simplejwt.authentication.JWTAuthentication',
 
@@ -98,7 +98,7 @@ ROOT_URLCONF = 'todo_drf.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
+        'DIRS': [BASE_DIR / '../frontend/build']
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -120,8 +120,12 @@ WSGI_APPLICATION = 'todo_drf.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'todos',
+        'USER': 'woozlic',
+        'PASSWORD': '123',
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
 
@@ -163,6 +167,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    BASE_DIR / '../frontend/build/static',
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

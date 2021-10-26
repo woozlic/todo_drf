@@ -9,6 +9,10 @@ import Projects from "./components/projects";
 import {UserProfile} from "./components/users";
 import {Project} from "./components/projects";
 import LoginForm from "./components/login";
+import {Box} from "@mui/material";
+import ProjectForm from "./components/projectForm";
+import TodosForm from "./components/todosForm";
+
 
 class App extends React.Component {
   constructor(props) {
@@ -42,6 +46,29 @@ class App extends React.Component {
           headers['Authorization'] = 'Token ' + this.state.token
       }
       return headers
+  }
+
+  createTodo(project, user, text) {
+      const headers = this.getHeaders()
+      const sendData = {
+          project: `http://127.0.0.1:8000/api/projects/${project}/`,
+          userOwner: `http://127.0.0.1:8000/api/users/${+user}/`,
+          text: text,
+          isActive: true
+      }
+      axios.post('http://127.0.0.1:8000/api/todos/', sendData, {headers})
+          .then(data => {
+              if (data.status === 201) {
+                  alert("Todo successfully created")
+                  this.loadData()
+              }
+          })
+          .catch(error => {
+              console.log(error)
+              if (error.response.status === 403){
+                  alert("You have to login in order to add todos")
+              }
+          })
   }
 
   setToken(token){
@@ -86,31 +113,96 @@ class App extends React.Component {
         })
         .catch(error => {
             this.setState({'projects': []})
-          console.log(error)
+            console.log(error)
         })
+  }
+
+  createProject(title, repositoryUrl, users) {
+      console.log(title, repositoryUrl, users)
+      const sendData = {
+          title: title,
+          repositoryUrl: repositoryUrl,
+          users: users,
+          todos: []
+      }
+      let headers = this.getHeaders()
+      axios.post('http://127.0.0.1:8000/api/projects/', sendData, {headers})
+          .then(data => {
+              if (data.status === 201){
+                  alert('Project successfully created!')
+                  this.loadData()
+              }
+          })
+          .catch(error => {
+              if (error.response.data){
+                  console.log(error.response.data)
+                  const msgTitle = error.response.data.title && 'Title: ' + error.response.data.title.join('\n')
+                  const msgRepositoryUrl = error.response.data.repositoryUrl && 'Repository Url: ' + error.response.data.repositoryUrl.join('\n')
+                  const msgUsers = error.response.data.users && 'Users: ' + error.response.data.users.join('\n')
+                  msgTitle && alert(msgTitle)
+                  msgRepositoryUrl && alert(msgRepositoryUrl)
+                  msgUsers && alert(msgUsers)
+              }
+              if (error.response.status === 403){
+                  alert("You have to login in order to create project")
+              }
+          })
+  }
+  deleteTodo(todoId) {
+      let headers = this.getHeaders()
+      axios.delete(`http://127.0.0.1:8000/api/todos/${todoId}`, {headers})
+          .then(data => {
+              if (data.status === 204){
+                  this.loadData()
+              }
+          })
+          .catch(error => {
+              console.log(error)
+              if (error){
+                  alert("You have to login in order to delete todos")
+              }
+          })
+  }
+  deleteProject(projectId) {
+      let headers = this.getHeaders()
+      axios.delete(`http://127.0.0.1:8000/api/projects/${projectId}`, {headers})
+          .then(data => {
+              console.log(data)
+              if (data.status === 204){
+                  alert("Project deleted!")
+                  this.loadData()
+              }
+          })
+          .catch(error => {
+              console.log('a ' + error)
+              if (error){
+                  alert("You have to login in order to delete projects")
+              }
+          })
   }
 
   componentDidMount() {
      this.getTokenFromStorage()
-     this.loadData()
   }
 
   render() {
     return (
-        <div>
+        <Box sx={{display: "flex", justifyContent: "center", pb: 8}}>
           <BrowserRouter>
               <Switch>
                   <Route exact path='/' render={() => (<Redirect to='/projects' />)} />
                   <Route exact path='/users' component={() => <UserList users={this.state.users} />} />
-                  <Route exact path='/projects' component={() => <Projects projects={this.state.projects} getHeaders={this.getHeaders.bind(this)} />} />
-                  <Route exact path='/login' component={() => <LoginForm getToken={(username, password) => {this.getToken(username, password)}} />} />
-                  <Route path={'/projects/:id'} component={() => <Project getHeaders={this.getHeaders.bind(this)} /> } />
+                  <Route exact path='/projects' component={() => <Projects deleteProject={this.deleteProject.bind(this)} users={this.state.users} projects={this.state.projects} getHeaders={this.getHeaders.bind(this)} />} />
+                  <Route exact path='/login' component={() => <LoginForm getToken={(username, password) => {this.getToken(username, password)}} isAuthenticated={this.isAuthenticated.bind(this)} />} />
+                  <Route path={'/projects/create'} component={() => <ProjectForm createProject={(title, repositoryUrl, users) => this.createProject(title, repositoryUrl, users)} users={this.state.users}/>} />
+                  <Route path={'/todos/create'} component={() => <TodosForm />} />
+                  <Route path={'/projects/:id'} component={() => <Project deleteTodo={this.deleteTodo.bind(this)} createTodo={this.createTodo.bind(this)} deleteProject={this.deleteProject.bind(this)} users={this.state.users} getHeaders={this.getHeaders.bind(this)} /> } />
                   <Route path={'/users/:id'} component={() => <UserProfile getHeaders={this.getHeaders.bind(this)} />} />
                   <Route component={NotFound} />
               </Switch>
               <Menu isAuthenticated={this.isAuthenticated.bind(this)} logout={() => { this.logout()}} getUsername={this.getUsername.bind(this)} />
           </BrowserRouter>
-        </div>
+        </Box>
     )
   }
 }

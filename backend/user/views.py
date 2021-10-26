@@ -1,5 +1,5 @@
 from rest_framework.viewsets import GenericViewSet
-from rest_framework.permissions import DjangoModelPermissions
+from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.pagination import LimitOffsetPagination
 from .serializers import UserSerializerV1, UserSerializerV2
@@ -11,7 +11,7 @@ class UserLimitOffsetPagination(LimitOffsetPagination):
 
 
 class UserViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin, UpdateModelMixin):
-    permission_classes = [DjangoModelPermissions]
+    permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
     queryset = User.objects.all()
     pagination_class = UserLimitOffsetPagination
 
